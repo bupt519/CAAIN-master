@@ -97,8 +97,11 @@ public class XmlToDatabaseService {
 
     // 插入奖项信息
     private void insertAward(File awardDir, String awardPath) {
+        // 获取投票类型
+        int awardType = awardDir.getName().charAt(0) - '0';
         //插入奖项信息并返回奖项ID
-        Award award = new Award(awardDir.getName().replaceAll("^\\d+-", ""));
+        String awardName = awardDir.getName().substring(1);
+        Award award = new Award(awardName.replaceAll("^\\d+-", ""), awardType);
         award.setVoted(false);
         int awardId = awardModel.addAndGetId(award);
 

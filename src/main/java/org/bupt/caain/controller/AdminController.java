@@ -1,6 +1,7 @@
 package org.bupt.caain.controller;
 
 import com.itextpdf.text.DocumentException;
+import org.bupt.caain.model.AwardModel;
 import org.bupt.caain.pojo.po.Award;
 import org.bupt.caain.pojo.po.Entry;
 import org.bupt.caain.service.AdminService;
@@ -10,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("admin")
@@ -18,11 +21,13 @@ public class AdminController {
 
     private final AdminService adminService;
     private final VoteService voteService;
+    private final AwardModel awardModel;
 
     @Autowired
-    public AdminController(AdminService adminService, VoteService voteService) {
+    public AdminController(AdminService adminService, VoteService voteService, AwardModel awardModel) {
         this.adminService = adminService;
         this.voteService = voteService;
+        this.awardModel = awardModel;
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)
@@ -88,6 +93,9 @@ public class AdminController {
     @ResponseBody
     @RequestMapping(value = "result/view/{awardId}", method = RequestMethod.GET)
     public CommonResult voteResult(@PathVariable int awardId){
+        // 构造返回信息
+        Map<String, Object> ret = new HashMap<>();
+        ret.put("award", awardModel.queryById(awardId));
         List<Entry> entries = adminService.getVoteResult(awardId);
         if(entries!=null&&entries.size()>0){
             // 排序
@@ -106,8 +114,8 @@ public class AdminController {
 
                 return a.getId() - b.getId();
             });
-
-            return CommonResult.success("查询成功", entries);
+            ret.put("vote", entries);
+            return CommonResult.success("查询成功", ret);
         }else{
             return CommonResult.failure("没有参评该奖项的作品");
         }

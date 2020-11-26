@@ -46,7 +46,7 @@ $(function () {
                         startVote(award_ids[i-1]);
                     });
                     $(`#view_btn_${i}`).on('click', ()=>{
-                        window.location.href="/admin/result";
+                        window.location.href="/admin/result?id=" + award_ids[i-1];
                     })
                 }
             }

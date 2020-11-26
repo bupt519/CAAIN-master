@@ -63,7 +63,8 @@ public class VoteService {
         Award award = awardModel.queryById(votesOfExpert.get(0).getAward_id());
         String awardName = award.getAward_name().replaceAll("^\\d-", "");
         String filePath = pdfPath + awardName + "/" + expert.getNum() + ".pdf";
-        new PrintUtils().printVoteResultPerExpert(votesOfExpert, filePath, awardName, expert.getNum());
+        // 打印
+        PrintUtils.printVoteResultPerExpert(votesOfExpert, filePath, awardName, expert.getNum());
     }
 
     public void preVotePerExpert(List<VotePerExpert> votesOfExpert, Expert expert) {
@@ -85,12 +86,13 @@ public class VoteService {
     /**
      * 生成最终总投票结果文件
      *
-     * @param awardId 最终结果文件对应的奖项ID
+     * @param award 最终结果文件对应的奖项
      */
-    public void buildVoteResult(int awardId) {
+    public void buildVoteResult(Award award) {
         if (shellBuildPrize) {
             log.info("生成作品最终获奖信息");
-            entryModel.buildPrizeField(awardId);
+            // 获取award类型
+            entryModel.buildPrizeField(award.getId(), award.getType(), award.getAward_name());
             shellBuildPrize = false;
         }
     }

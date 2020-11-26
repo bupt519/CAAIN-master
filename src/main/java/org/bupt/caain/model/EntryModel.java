@@ -76,17 +76,25 @@ public class EntryModel {
      *
      * @param awardId
      */
-    public void buildPrizeField(int awardId) {
+    public void buildPrizeField(int awardId, int awardType, String awardName) {
         List<Entry> entries = jdbcTemplate.query("SELECT id, level1, level2, level3 FROM entry WHERE award_id = ?", new BeanPropertyRowMapper<>(Entry.class),
                 awardId);
         log.warn(entries.toString());
         for (Entry entry : entries) {
             if (entry.getLevel1() >= firstThreshold) {
-                entry.setEntry_prize("一等奖");
+                if (awardType == 1) {
+                    entry.setEntry_prize(awardName);
+                } else {
+                    entry.setEntry_prize("一等奖");
+                }
             } else if (entry.getLevel1() + entry.getLevel2() >= secondThreshold) {
                 entry.setEntry_prize("二等奖");
             } else {
-                entry.setEntry_prize("三等奖");
+                if (awardType == 1) {
+                    entry.setEntry_prize("无");
+                } else {
+                    entry.setEntry_prize("三等奖");
+                }
             }
             log.warn(entry.getEntry_prize() + " " + entry.getId());
             jdbcTemplate.update("UPDATE entry SET entry_prize = ? WHERE id = ?", entry.getEntry_prize(), entry.getId());
@@ -151,5 +159,10 @@ public class EntryModel {
     public List<Entry> queryVotedEntries() {
         return jdbcTemplate.query("SELECT e.id, e.entry_name, e.entry_prize, e.entry_application, e.application_path, e.level1, e.level2, e.level3, e.award_id" +
                 " FROM entry e left join award a on e.award_id = a.id where a.voted = 1", new BeanPropertyRowMapper<>(Entry.class));
+    }
+
+    public List<Entry> queryVotedEntriesByAwardId(int awardId) {
+        return jdbcTemplate.query("SELECT e.id, e.entry_name, e.entry_prize, e.entry_application, e.application_path, e.level1, e.level2, e.level3, e.award_id" +
+                " FROM entry e left join award a on e.award_id = a.id where a.id = ?", new BeanPropertyRowMapper<>(Entry.class), awardId);
     }
 }

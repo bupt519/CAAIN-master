@@ -23,12 +23,7 @@
 <div class="container table-responsive text-center" style="margin-top:40px;">
     <table id="voteTable" class="table table-striped table-bordered" style="font-size:16px;">
         <thead id="voteThead">
-        <tr>
-            <th class="text-center">序号</th>
-            <th class="text-center">奖项</th>
-            <th class="text-center">一等奖</th>
-            <th class="text-center">二等奖</th>
-            <th class="text-center">三等奖</th>
+        <tr id="voteHeader">
         </tr>
         </thead>
         <tbody id="voteBody">

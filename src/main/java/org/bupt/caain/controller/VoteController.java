@@ -1,7 +1,9 @@
 package org.bupt.caain.controller;
 
 import com.itextpdf.text.DocumentException;
+import org.bupt.caain.model.AwardModel;
 import org.bupt.caain.pojo.jo.VotePerExpert;
+import org.bupt.caain.pojo.po.Award;
 import org.bupt.caain.pojo.po.Expert;
 import org.bupt.caain.pojo.vo.VoteDataVo;
 import org.bupt.caain.pojo.vo.VoteEntryVo;
@@ -24,12 +26,14 @@ import java.util.Map;
 public class VoteController {
 
     private final VoteService voteService;
+    private final AwardModel awardModel;
 
     private static final Logger log = LoggerFactory.getLogger(VoteController.class);
 
     @Autowired
-    public VoteController(VoteService voteService) {
+    public VoteController(VoteService voteService, AwardModel awardModel) {
         this.voteService = voteService;
+        this.awardModel = awardModel;
     }
 
     /**
@@ -137,9 +141,15 @@ public class VoteController {
             return CommonResult.failure("投票还未结束");
         }
         Expert expert = voteService.getExpertByIp(ip);
-        voteService.buildVoteResult(awardId);
+        Award award = awardModel.queryById(awardId);
+        voteService.buildVoteResult(award);
         List<VoteEntryVo> voteResult = voteService.getVoteResult(awardId, expert);
-        return CommonResult.success("获取投票结果", voteResult);
+
+        // 构造返回信息
+        Map<String, Object> ret = new HashMap<>();
+        ret.put("award", award);
+        ret.put("vote", voteResult);
+        return CommonResult.success("获取投票结果", ret);
     }
 
 

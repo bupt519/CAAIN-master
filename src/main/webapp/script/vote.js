@@ -42,12 +42,34 @@ $(function () {
                 let award_title_h2 = $("#award_title");
                 award_title_h2.text("吴文俊人工智能科学技术-" + awards[0]['award_name'].replace(/^\d-/, ''));
                 let entries = awards[0]['entries'];
+                let awardType = awards[0]['type'];
                 let voteBody = $('#voteBody');
                 voteBody.empty();
-                for (let i = 0, len = entries.length; i < len; ++i) {
-                    console.log('level ' + i + ' ' + entries[i]['level1']);
-                    voteBody.append(`<tr>
-                        <td id="entryId">${i + 1}</td>
+                // 每行一个投票信息
+                // 在这里奖的类型
+                if (awardType === 1) { // 投是/否
+                    for (let i = 0, len = entries.length; i < len; ++i) {
+                        console.log('level ' + i + ' ' + entries[i]['level1']);
+                        voteBody.append(`<tr>
+                        <td id="entryId">${entries[i]['id']}</td>
+                        <td id="entry_id" hidden>${entries[i]['id']}</td>
+                        <td id="prize">
+                            <select class="form-control">
+                                <option>无</option>
+                                <option ${entries[i]['level1'] === 1 ? 'selected' : null}>是</option>
+                                <option ${entries[i]['level3'] === 1 ? 'selected' : null}>否</option>
+                            </select>
+                        </td>
+                        <td>${expert_count}</td>
+                        <td id="entry_name">${entries[i]['entry_name'].replace(/^\d-/, '')}</td>
+                        <td></td>
+                    </tr>`)
+                    }
+                } else { // 投其他
+                    for (let i = 0, len = entries.length; i < len; ++i) {
+                        console.log('level ' + i + ' ' + entries[i]['level1']);
+                        voteBody.append(`<tr>
+                        <td id="entryId">${entries[i]['id']}</td>
                         <td id="entry_id" hidden>${entries[i]['id']}</td>
                         <td id="prize">
                             <select class="form-control">
@@ -61,6 +83,7 @@ $(function () {
                         <td id="entry_name">${entries[i]['entry_name'].replace(/^\d-/, '')}</td>
                         <td></td>
                     </tr>`)
+                    }
                 }
                 if (result['content']['expert']['voted']) {
                     $('#submitVote').attr('disabled', 'disabled');
@@ -130,11 +153,11 @@ $(function () {
             let prize = $(this).find('option:selected').text();
             let entry_id = $(this).find('#entry_id').text();
             let entry_name = $(this).find('#entry_name').text();
-            if (prize === '一等奖') {
+            if (prize === '一等奖' || prize === '是') {
                 level1 = 1;
             } else if (prize === '二等奖') {
                 level2 = 1;
-            } else if (prize === '三等奖') {
+            } else if (prize === '三等奖' || prize === '否') {
                 level3 = 1;
             }
             let entry_expert = {};
@@ -223,10 +246,31 @@ $(function () {
                         '</tr>');*/
                     let voteBody = $("#voteBody");
                     voteBody.empty();
-                    content = result['content'];
-                    for (let i = 0; i < content.length; i++) {
-                        voteBody.append(`<tr>
-                        <td id="entryId">${i + 1}</td>
+                    let award = result['content']['award'];
+                    let awardType = award["type"];
+                    let content = result['content']['vote'];
+                    // 在这里奖的类型
+                    if (awardType === 1) { // 投是/否
+                        for (let i = 0; i < content.length; i++) {
+                            voteBody.append(`<tr>
+                        <td id="entryId">${entries[i]['id']}</td>
+                        <td id="entry_id" hidden>${content[i]['id']}</td>
+                        <td id="prize">
+                            <select class="form-control">
+                                <option>无</option>
+                                <option ${content[i]['level1'] === 1 ? 'selected' : null}>是</option>
+                                <option ${content[i]['level3'] === 1 ? 'selected' : null}>否</option>
+                            </select>
+                        </td>
+                        <td>${content[i]['expert_count']}</td>
+                        <td id="entry_name">${content[i]['entry_name'].replace(/^\d-/, '')}</td>
+                        <td>${content[i]['entry_prize']}</td>
+                    </tr>`)
+                        }
+                    } else { // 投其他
+                        for (let i = 0; i < content.length; i++) {
+                            voteBody.append(`<tr>
+                        <td id="entryId">${entries[i]['id']}</td>
                         <td id="entry_id" hidden>${content[i]['id']}</td>
                         <td id="prize">
                             <select class="form-control">
@@ -240,6 +284,7 @@ $(function () {
                         <td id="entry_name">${content[i]['entry_name'].replace(/^\d-/, '')}</td>
                         <td>${content[i]['entry_prize']}</td>
                     </tr>`)
+                        }
                     }
                 } else {
                     toastr.options.timeout = 2000;

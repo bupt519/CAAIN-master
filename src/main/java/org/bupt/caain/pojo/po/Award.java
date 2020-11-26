@@ -11,11 +11,19 @@ public class Award {
     //    是否参与投票
     private boolean voted;
 
+    // 奖项类型 0-投一二三等奖;1-投是/否
+    private int type = 0;
+
     public Award() {
     }
 
     public Award(String award_name) {
         this.award_name = award_name;
+    }
+
+    public Award(String award_name, int type) {
+        this.award_name = award_name;
+        this.type = type;
     }
 
     public int getId() {
@@ -48,6 +56,15 @@ public class Award {
                 "id=" + id +
                 ", award_name='" + award_name + '\'' +
                 ", voted=" + voted +
+                ", type=" + type +
                 '}';
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
     }
 }

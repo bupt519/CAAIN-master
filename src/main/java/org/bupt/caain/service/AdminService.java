@@ -62,7 +62,7 @@ public class AdminService {
         List<Entry> entries = entryModel.queryEntriesByAwardId(award_id);
         Award award = awardModel.queryById(award_id);
         String filePath = pdfPath + award.getAward_name().replaceAll("^\\d-", "") + "/final.pdf";
-        new PrintUtils().printVoteResult(entries, filePath, award.getAward_name().replaceAll("^\\d-", ""));
+        PrintUtils.printVoteResult(entries, award, filePath, award.getAward_name().replaceAll("^\\d-", ""));
     }
 
     public int startVote(int award_id) {
@@ -105,7 +105,6 @@ public class AdminService {
     }
 
     public List<Entry> getVoteResult(int awardId) {
-        return this.entryModel.queryVotedEntries();
-
+        return this.entryModel.queryVotedEntriesByAwardId(awardId);
     }
 }
