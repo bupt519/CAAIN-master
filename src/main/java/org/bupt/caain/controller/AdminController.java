@@ -90,6 +90,23 @@ public class AdminController {
     public CommonResult voteResult(@PathVariable int awardId){
         List<Entry> entries = adminService.getVoteResult(awardId);
         if(entries!=null&&entries.size()>0){
+            // 排序
+            entries.sort((a, b) -> {
+                if (a.getLevel1() != b.getLevel1()) {
+                    return b.getLevel1() - a.getLevel1();
+                }
+
+                if (a.getLevel2() != b.getLevel2()) {
+                    return b.getLevel2() - a.getLevel2();
+                }
+
+                if (a.getLevel3() != b.getLevel3()) {
+                    return b.getLevel3() - a.getLevel3();
+                }
+
+                return a.getId() - b.getId();
+            });
+
             return CommonResult.success("查询成功", entries);
         }else{
             return CommonResult.failure("没有参评该奖项的作品");

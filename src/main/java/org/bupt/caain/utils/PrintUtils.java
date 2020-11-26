@@ -74,18 +74,23 @@ public class PrintUtils {
 
         addBlankLine(document, 2);
         Font cellFont = FontFactory.getFont("STSong-Light", "UniGB-UCS2-H", 18);
-        PdfPTable table = new PdfPTable(9);
+        PdfPTable table = new PdfPTable(14);
         PdfPCell cell1 = new PdfPCell(new Paragraph("项目名称", cellFont));
         cell1.setColspan(5);
         cell1.setMinimumHeight(20);
         PdfPCell cell2 = new PdfPCell(new Paragraph("一等奖", cellFont));
+        cell2.setColspan(2);
         cell2.setMinimumHeight(20);
         PdfPCell cell3 = new PdfPCell(new Paragraph("二等奖", cellFont));
-        cell2.setMinimumHeight(20);
-        PdfPCell cell4 = new PdfPCell(new Paragraph("三等奖", cellFont));
+        cell3.setColspan(2);
         cell3.setMinimumHeight(20);
+        PdfPCell cell4 = new PdfPCell(new Paragraph("三等奖", cellFont));
+        cell4.setColspan(2);
+        cell4.setMinimumHeight(20);
         PdfPCell cell5 = new PdfPCell(new Paragraph("获奖结果", cellFont));
+        cell5.setColspan(3);
         cell5.setMinimumHeight(20);
+
         table.addCell(cell1);
         table.addCell(cell2);
         table.addCell(cell3);
@@ -97,12 +102,16 @@ public class PrintUtils {
             nameCell.setColspan(5);
             nameCell.setMinimumHeight(20);
             PdfPCell level1Cell = new PdfPCell(new Paragraph(entry.getLevel1() + "", cellFont));
+            level1Cell.setColspan(2);
             level1Cell.setMinimumHeight(20);
             PdfPCell level2Cell = new PdfPCell(new Paragraph(entry.getLevel2() + "", cellFont));
+            level2Cell.setColspan(2);
             level2Cell.setMinimumHeight(20);
             PdfPCell level3Cell = new PdfPCell(new Paragraph(entry.getLevel3() + "", cellFont));
+            level3Cell.setColspan(2);
             level3Cell.setMinimumHeight(20);
             PdfPCell prizeCell = new PdfPCell(new Paragraph(entry.getEntry_prize() + "", cellFont));
+            prizeCell.setColspan(3);
             table.addCell(nameCell);
             table.addCell(level1Cell);
             table.addCell(level2Cell);
