@@ -22,7 +22,7 @@ resources:
       - spring-tx: transactionmanager配置
    - sql: 数据库建表sql
 
-main:
+java:
    - controller: 页面请求拦截及服务调用模块，包括后台管理界面(admin), 后台数据查看界面(view), 前台展示界面(home), 前台投票界面(vote)
    - model: DAO定义模块，包括专家、奖项
    - pojo: pojo定义模块，包括专家、奖项
